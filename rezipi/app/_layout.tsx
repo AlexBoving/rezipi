@@ -1,14 +1,19 @@
-import { StyleSheet } from "react-native";
-import { Tabs, TabList, TabTrigger, TabSlot } from "expo-router/ui";
-import { CustomTabList } from "@/components/CustomTabList";
-import { useFonts } from "expo-font";
+import ConvexClientProvider from "@/providers/convex-client-providers";
 import * as SplashScreen from "expo-splash-screen";
+import { Slot } from "expo-router";
+import { useFonts } from "expo-font";
 import { useEffect } from "react";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function Layout() {
+export default function RootLayoutNav() {
+  const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
+
+  if (!publishableKey) {
+    throw new Error("Add EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env");
+  }
+
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -24,19 +29,8 @@ export default function Layout() {
   }
 
   return (
-    <Tabs>
-      <TabSlot />
-      <CustomTabList />
-      <TabList style={styles.tabList}>
-        <TabTrigger name="home" href="/" />
-        <TabTrigger name="camera" href="/camera" />
-      </TabList>
-    </Tabs>
-
-    // Hide the TabList component as it's only role is to define the tabs. The CustomTabList component will be used to render the tabs.
+    <ConvexClientProvider>
+      <Slot />
+    </ConvexClientProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  tabList: { display: "none" },
-});

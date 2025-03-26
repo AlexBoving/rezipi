@@ -4,6 +4,9 @@ import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
 import { memo } from "react";
 
+// Auth.
+import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
+
 enum FoodImages {
   "Spaghetti Carbonara" = require("@/assets/images/food/spaghetti.jpg"),
   "Avocado and Egg Toast" = require("@/assets/images/food/avocado-toast.jpg"),
