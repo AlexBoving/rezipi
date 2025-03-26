@@ -1,7 +1,7 @@
 export default {
   providers: [
     {
-      domain: process.env.CONVEX_SITE_URL,
+      domain: "https://sought-hagfish-93.clerk.accounts.dev",
       applicationID: "convex",
     },
   ],
