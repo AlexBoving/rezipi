@@ -1,10 +1,24 @@
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
+import { CameraView, useCameraPermissions } from "expo-camera";
+import { Button, StyleSheet, Text, TouchableOpacity, View, Alert } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function Camera() {
-  const [facing, setFacing] = useState<CameraType>("back");
+export default function App() {
   const [permission, requestPermission] = useCameraPermissions();
+  const [torch, setTorch] = useState(false);
+
+  const askForPermission = () => {
+    Alert.alert("Camera Permission", "Do you consent to using the camera with this app?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        onPress: requestPermission,
+      },
+    ]);
+  };
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -14,24 +28,26 @@ export default function Camera() {
   if (!permission.granted) {
     // Camera permissions are not granted yet.
     return (
-      <View style={styles.container}>
-        <Text style={styles.message}>We need your permission to show the camera</Text>
-        <Button onPress={requestPermission} title="grant permission" />
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <Text style={{ textAlign: "center", paddingBottom: 10 }}>We need your permission to show the camera</Text>
+        <Button onPress={askForPermission} title="Grant Permission" color="dark" />
       </View>
     );
   }
 
-  function toggleCameraFacing() {
-    setFacing((current) => (current === "back" ? "front" : "back"));
-  }
-
   return (
-    <View style={styles.container}>
-      <CameraView style={styles.camera} facing={facing}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-            <Text style={styles.text}>Flip Camera</Text>
-          </TouchableOpacity>
+    <View style={{ flex: 1, justifyContent: "center" }}>
+      <CameraView style={{ flex: 1 }} facing={"back"} enableTorch={torch}>
+        <View style={styles.container}>
+          <View style={{ flex: 1, alignSelf: "flex-end", alignItems: "center", flexDirection: "row", gap: 32 }}>
+            <TouchableOpacity style={{ flex: 1, alignItems: "flex-end" }} onPress={() => setTorch(!torch)}>
+              {torch ? <Ionicons name="flash-off" size={24} color="white" /> : <Ionicons name="flash" size={24} color="white" />}
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Ionicons name="camera" size={16 * 4} color="lightgrey" />
+            </TouchableOpacity>
+            <View style={{ flex: 1 }} />
+          </View>
         </View>
       </CameraView>
     </View>
@@ -41,29 +57,9 @@ export default function Camera() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-  },
-  message: {
-    textAlign: "center",
-    paddingBottom: 10,
-  },
-  camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
     flexDirection: "row",
+    justifyContent: "space-between",
     backgroundColor: "transparent",
-    margin: 64,
-  },
-  button: {
-    flex: 1,
-    alignSelf: "flex-end",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
+    marginVertical: 160,
   },
 });
