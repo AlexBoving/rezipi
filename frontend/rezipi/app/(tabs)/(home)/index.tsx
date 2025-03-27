@@ -1,11 +1,10 @@
-import { Text, View, Pressable, FlatList } from "react-native";
-import { Stack, Link } from "expo-router";
-import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
+import { Link, Stack } from "expo-router";
 import { memo } from "react";
+import { FlatList, Pressable, Text, View } from "react-native";
 
 // Auth.
-import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
 
 enum FoodImages {
   "Spaghetti Carbonara" = require("@/assets/images/food/spaghetti.jpg"),
